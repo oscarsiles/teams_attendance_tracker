@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance Tracker</title>
+  </head>
+  <body>
+    <h1>Attendance Tracker</h1>
+    <form
+      action="{{ url_for('data') }}"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <h3>Upload Attendance downloaded from Microsoft Teams</h3>
+      <input type="file" name="csvfile" accept=".csv, .xlsx" />
+      <input type="submit" value="Upload" />
+    </form>
+  </body>
+</html>
