@@ -1,11 +1,17 @@
-from flask import Flask, render_template, request
+import os
+from flask import Flask, render_template, request, send_file, redirect
+from werkzeug.utils import secure_filename
 import pandas as pd
 import csv
 from io import StringIO 
 
 from attendance import calculate_attendance
 
-app = Flask(__name__)
+UPLOAD_FOLDER = 'uploads/'
+
+app = Flask(__name__, template_folder='templates')
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -15,18 +21,40 @@ def index():
 @app.route("/data", methods=["GET", "POST"])
 def data():
     if request.method == "POST":
-        f = request.files['csvfile']
-        print(f'--------> {f}')
-        data = []
-        data = f.read().decode("utf-8")
 
-        StringData = StringIO(data)
-        df = pd.read_csv(StringData)
-        print(df)
+        # check if the post request has the file part
+        if 'csvfile' not in request.files:
+            print('no file')
+            return redirect(request.url)
+        file = request.files['csvfile']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            print('no filename')
+            return redirect(request.url)
+        else:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            print("saved file successfully")
+            data = files.read().decode("utf-8")
+            StringData = StringIO(data)
+            df = pd.read_csv(StringData)
+            print(df)
+            result = calculate_attendance(df)
+            #send file name as parameter to downlad
+            return redirect('/downloadfile/'+ filename)
+    return render_template('data.html')
 
-        result = calculate_attendance(df)
 
-        return render_template('data.html', data=result)
+# Download API
+@app.route("/downloadfile/<filename>", methods = ['GET'])
+def download_file(filename):
+    return render_template('download.html',value=filename)
+@app.route('/return-files/<filename>')
+def return_files_tut(filename):
+    file_path = UPLOAD_FOLDER + filename
+    return send_file(file_path, as_attachment=True, attachment_filename='')
+
 
 if __name__ == "__main__":
     app.run(debug=True)
