@@ -36,11 +36,10 @@ def data():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print("saved file successfully")
-            data = files.read().decode("utf-8")
-            StringData = StringIO(data)
-            df = pd.read_csv(StringData)
+            df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(df)
             result = calculate_attendance(df)
+            result.to_csv(UPLOAD_FOLDER + "[ATTENDANCE]" + filename, index=False)
             #send file name as parameter to downlad
             return redirect('/downloadfile/'+ filename)
     return render_template('data.html')
