@@ -7,7 +7,7 @@ from io import StringIO
 
 from app.attendance import calculate_attendance
 
-UPLOAD_FOLDER = 'uploads/'
+UPLOAD_FOLDER = 'app/uploads/'
 
 app = Flask(__name__, template_folder='templates')
 
