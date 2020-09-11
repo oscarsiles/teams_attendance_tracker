@@ -40,6 +40,8 @@ def data():
             print(df)
             result = calculate_attendance(df)
             result.to_csv(UPLOAD_FOLDER + "[ATTENDANCE]" + filename, index=False)
+            #Delete file from storage after creating dataframe
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             #send file name as parameter to downlad
             return redirect('/downloadfile/'+ filename)
     return render_template('data.html')
@@ -52,6 +54,7 @@ def download_file(filename):
 @app.route('/return-files/<filename>')
 def return_files_tut(filename):
     file_path = UPLOAD_FOLDER + filename
+    print("DELETED")
     return send_file(file_path, as_attachment=True, attachment_filename='')
 
 
