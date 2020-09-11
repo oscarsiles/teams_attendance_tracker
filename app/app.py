@@ -8,7 +8,7 @@ from io import StringIO
 from app.attendance import calculate_attendance
 
 UPLOAD_FOLDER = 'app/uploads/'
-result = []
+result_copy = []
 
 app = Flask(__name__, template_folder='templates')
 
@@ -40,6 +40,7 @@ def data():
             df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(df)
             result = calculate_attendance(df)
+            result_copy = result
             result.to_csv(UPLOAD_FOLDER + "[ATTENDANCE]" + filename, index=False)
             #Delete file from storage after creating dataframe
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -51,7 +52,7 @@ def data():
 # Download API
 @app.route("/downloadfile/<filename>", methods = ['GET'])
 def download_file(filename):
-    return render_template('download.html',value=filename, result=result)
+    return render_template('download.html',value=filename, result=result_copy)
 @app.route('/return-files/<filename>')
 def return_files_tut(filename):
     file_path = UPLOAD_FOLDER + filename
