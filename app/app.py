@@ -44,7 +44,7 @@ def data():
             #Delete file from storage after creating dataframe
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             #send file name as parameter to downlad
-            return redirect('/downloadfile/'+ filename)
+            return redirect('/downloadfile/'+ filename, result=result)
     return render_template('data.html')
 
 
