@@ -5,7 +5,7 @@ import pandas as pd
 import csv
 from io import StringIO 
 
-from attendance import calculate_attendance
+from app.attendance import calculate_attendance
 
 UPLOAD_FOLDER = 'uploads/'
 
