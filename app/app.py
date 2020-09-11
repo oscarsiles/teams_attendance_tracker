@@ -44,7 +44,7 @@ def data():
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             #send file name as parameter to downlad
             return redirect('/downloadfile/'+ filename)
-    return render_template('data.html')
+    return render_template('dataaaaaa.html')
 
 
 # Download API
