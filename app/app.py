@@ -59,7 +59,7 @@ def download_file(filename, result_copy):
     return render_template('download.html',value=filename, result=result_copy)
 @app.route('/return-files/<filename>')
 def return_files_tut(filename):
-    file_path = 'app/uploads' + filename
+    file_path = UPLOAD_FOLDER + filename
     print("DELETEDdddddd")
     return send_file(file_path, as_attachment=True, attachment_filename='')
 
