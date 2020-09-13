@@ -7,7 +7,7 @@ from io import StringIO
 
 from app.attendance import calculate_attendance
 
-UPLOAD_FOLDER = '/app/app/uploads/'
+UPLOAD_FOLDER = './app/uploads/'
 result_copy = ['HELLO']
 
 app = Flask(__name__, template_folder='templates')
@@ -23,6 +23,8 @@ def index():
 def data():
     print('----------------------------------------')
     print(f'ROOT: {app.root_path}')
+    print(f'Instance Path: {app.instance_path}')
+    print(f'Absolute Path: {os.path.abspath}')
     if request.method == "POST":
 
         # check if the post request has the file part

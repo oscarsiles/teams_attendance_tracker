@@ -11,8 +11,8 @@ def calculate_attendance(df):
 
     student_attendance = []
     time_format = '%m/%d/%Y, %I:%M:%S %p'
-    meeting_start_time = datetime.strptime('9/9/2020, 11:00:00 AM', time_format)
-    meeting_end_time = datetime.strptime('9/9/2020, 12:00:00 PM', time_format)
+    meeting_start_time = datetime.strptime('9/3/2020, 9:00:00 AM', time_format)
+    meeting_end_time = datetime.strptime('9/3/2020, 10:00:00 AM', time_format)
     time_attended = meeting_end_time - meeting_start_time
 
     for i in df2.index:

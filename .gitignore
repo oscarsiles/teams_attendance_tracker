@@ -6,4 +6,3 @@ env/
 app/__pycache__
 attendance_script.ipynb
 create_dummy_csv.ipynb
-app/uploads/*
