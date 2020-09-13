@@ -47,16 +47,16 @@ def data():
             # os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             #send file name as parameter to downlad
             print(filename)
-            return redirect(url_for('download_file', filename=filename, result_copy=result_copy))
+            return redirect(url_for('download_file', filename=filename))
     return render_template('data.html')
 
 
 # Download API
 @app.route("/downloadfile/<filename>", methods = ['GET'])
-def download_file(filename, result_copy):
+def download_file(filename):
     print(f'RESULT COPY: {result_copy}')
     print(f'Filename: {filename}')
-    return render_template('download.html',value=filename, result=result_copy)
+    return render_template('download.html',value=filename)
 @app.route('/return-files/<filename>')
 def return_files_tut(filename):
     file_path = UPLOAD_FOLDER + filename
