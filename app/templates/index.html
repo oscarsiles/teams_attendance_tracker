@@ -19,13 +19,18 @@
         enctype="multipart/form-data"
       >
         <h3>Upload Attendance downloaded from Microsoft Teams</h3>
-        <input type="file" name="csvfile" accept=".csv, .xlsx" />
+        <input
+          type="file"
+          name="attendance-file"
+          accept=".csv, .xlsx"
+          required
+        />
         <br /><br />
         <label for="start_time">Meeting Start Time</label>
         <input type="datetime-local" name="start_time" required />
         <br /><br />
         <label for="end_time">Meeting End Time</label>
-        <input type="datetime-local" name="end_time" />
+        <input type="datetime-local" name="end_time" required />
         <br /><br />
         <input type="submit" value="Upload" />
       </form>

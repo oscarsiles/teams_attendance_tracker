@@ -29,26 +29,44 @@ def data():
         end_time = datetime.strptime(request.form['end_time'], time_format)
         print(f'Edited  Time: {start_time} -- {end_time}')
         # check if the post request has the file part
-        if 'csvfile' not in request.files:
+        if 'attendance-file' not in request.files:
             print('no file')
             return redirect(request.url)
-        file = request.files['csvfile']
+        file = request.files['attendance-file']
         # if user does not select file, browser also
         # submit a empty part without filename
         if file.filename == '':
             print('no filename')
             return redirect(request.url)
         else:
+
             filename = secure_filename(file.filename)
+            print(f'hi FILENAME: {filename}')
+            #get file extension
+            file_extension = os.path.splitext(filename)[1]
+
+            #save file to uploads folder
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+            if file_extension == '.csv':
+            #read file as pandas dataframe considering file extension
+                df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            elif file_extension == '.xlsx':
+                df = pd.read_excel(os.path.join(app.config['UPLOAD_FOLDER'], filename)) 
+            else:
+                return "Unsupported file type please upload .csv or .xlsx file"
             print(df)
-            # start_time = df['Timestamp'].iloc[0]
-            # print(start_time)
+            
+            #calculate time attended and return a dataframe
             result = calculate_attendance(df, start_time, end_time)
+
+            #copy result dataframe
             result_copy = result
             print(f'RESULT COPY 1: {result_copy}')
+
+            #convert result dataframe to .csv file for user to download
             result.to_csv(UPLOAD_FOLDER + "[ATTENDANCE]" + filename, index=False)
+
             #Delete file from storage after creating dataframe
             # os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             #send file name as parameter to downlad
@@ -59,7 +77,9 @@ def data():
 # Download API
 @app.route("/downloadfile/<filename>", methods = ['GET'])
 def download_file(filename):
-    print(f'RESULT COPY: {result_copy}')
+    print("Result Copy:")
+    print(result_copy)
+    print(f'Filename: {filename}')
     return render_template('download.html',value=filename)
 @app.route('/return-files/<filename>')
 def return_files_tut(filename):
