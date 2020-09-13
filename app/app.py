@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, send_file, redirect
+from flask import Flask, render_template, request, send_file, redirect, url_for
 from werkzeug.utils import secure_filename
 import pandas as pd
 import csv
@@ -8,7 +8,7 @@ from io import StringIO
 from app.attendance import calculate_attendance
 
 UPLOAD_FOLDER = 'app/uploads/'
-result_copy = []
+result_copy = ['HELLO']
 
 app = Flask(__name__, template_folder='templates')
 
@@ -36,28 +36,31 @@ def data():
         else:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print("saved file successfully")
             df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(df)
             result = calculate_attendance(df)
+            print("HELLO")
             result_copy = result
+            print(f'RESULT COPY 1: {result_copy}')
             result.to_csv(UPLOAD_FOLDER + "[ATTENDANCE]" + filename, index=False)
             #Delete file from storage after creating dataframe
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             #send file name as parameter to downlad
-            return redirect('/downloadfile/'+ filename)
+            print(filename)
+            return redirect(url_for('download_file', filename=filename, result_copy=result_copy))
     return render_template('data.html')
 
 
 # Download API
 @app.route("/downloadfile/<filename>", methods = ['GET'])
-def download_file(filename):
-    print("Hello")
+def download_file(filename, result_copy):
+    print(f'RESULT COPY: {result_copy}')
+    print(f'Filename: {filename}')
     return render_template('download.html',value=filename, result=result_copy)
 @app.route('/return-files/<filename>')
 def return_files_tut(filename):
-    file_path = UPLOAD_FOLDER + filename
-    print("DELETED")
+    file_path = 'app/uploads' + filename
+    print("DELETEDdddddd")
     return send_file(file_path, as_attachment=True, attachment_filename='')
 
 
