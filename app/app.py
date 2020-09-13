@@ -44,7 +44,7 @@ def data():
             print(f'RESULT COPY 1: {result_copy}')
             result.to_csv(UPLOAD_FOLDER + "[ATTENDANCE]" + filename, index=False)
             #Delete file from storage after creating dataframe
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             #send file name as parameter to downlad
             print(filename)
             return redirect(url_for('download_file', filename=filename, result_copy=result_copy))
