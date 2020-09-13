@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 import pandas as pd
 import csv
 from io import StringIO 
+from datetime import datetime
 
 from app.attendance import calculate_attendance
 
@@ -21,12 +22,12 @@ def index():
 
 @app.route("/data", methods=["GET", "POST"])
 def data():
-    print('----------------------------------------')
-    print(f'ROOT: {app.root_path}')
-    print(f'Instance Path: {app.instance_path}')
-    print(f'Absolute Path: {os.path.abspath}')
+    
     if request.method == "POST":
-
+        time_format = '%Y-%m-%dT%H:%M'
+        start_time = datetime.strptime(request.form['start_time'], time_format)
+        end_time = datetime.strptime(request.form['end_time'], time_format)
+        print(f'Edited  Time: {start_time} -- {end_time}')
         # check if the post request has the file part
         if 'csvfile' not in request.files:
             print('no file')
@@ -42,15 +43,15 @@ def data():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(df)
-            result = calculate_attendance(df)
-            print("HELLO")
+            # start_time = df['Timestamp'].iloc[0]
+            # print(start_time)
+            result = calculate_attendance(df, start_time, end_time)
             result_copy = result
             print(f'RESULT COPY 1: {result_copy}')
             result.to_csv(UPLOAD_FOLDER + "[ATTENDANCE]" + filename, index=False)
             #Delete file from storage after creating dataframe
             # os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             #send file name as parameter to downlad
-            print(filename)
             return redirect(url_for('download_file', filename=filename))
     return render_template('data.html')
 
@@ -59,7 +60,6 @@ def data():
 @app.route("/downloadfile/<filename>", methods = ['GET'])
 def download_file(filename):
     print(f'RESULT COPY: {result_copy}')
-    print(f'Filename: {filename}')
     return render_template('download.html',value=filename)
 @app.route('/return-files/<filename>')
 def return_files_tut(filename):
