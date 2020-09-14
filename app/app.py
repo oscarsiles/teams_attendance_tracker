@@ -73,11 +73,17 @@ def data():
 
     return render_template('data.html')
 
-@app.route('/view-file')
-def view_file():
-    
-    print(f'DATAFRAME: {df}')
-    return render_template('index.html', original_file=df)
+
+#Download demo file 'test.csv'
+@app.route('/demo.csv')
+def download_demo_file():
+    demo_file_path = 'uploads/test.csv'
+    return send_file(demo_file_path, as_attachment=False, attachment_filename='test.csv')
+# @app.route('/view-file')
+# def view_file():
+
+#     print(f'DATAFRAME: {df}')
+#     return render_template('index.html', original_file=df)
 
 @app.route('/return-files/<filename>')
 def return_files_tut(filename):
