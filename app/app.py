@@ -9,11 +9,13 @@ from datetime import datetime
 from app.attendance import calculate_attendance
 
 UPLOAD_FOLDER = './app/uploads/'
-result_copy = ['HELLO']
 
 app = Flask(__name__, template_folder='templates')
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+#to check if user has chosen a file
+file_chosen = False
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -29,47 +31,53 @@ def data():
         end_time = datetime.strptime(request.form['end_time'], time_format)
         print(f'Edited  Time: {start_time} -- {end_time}')
         # check if the post request has the file part
-        if 'attendance-file' not in request.files:
-            print('no file')
-            return redirect(request.url)
+        # if 'attendance-file' not in request.files:
+        #     print('no file')
+        #     return redirect(request.url)
         file = request.files['attendance-file']
         # if user does not select file, browser also
         # submit a empty part without filename
-        if file.filename == '':
-            print('no filename')
-            return redirect(request.url)
+        # if file.filename == '':
+        #     print('no filename')
+        #     return redirect(request.url)
+        # else:
+        file_chosen = True
+        filename = secure_filename(file.filename)
+        print(f'FILENAME: {filename}')
+        #get file extension
+        file_extension = os.path.splitext(filename)[1]
+
+        #save file to uploads folder
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        if file_extension == '.csv':
+        #read file as pandas dataframe considering file extension
+            df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        elif file_extension == '.xlsx':
+            df = pd.read_excel(os.path.join(app.config['UPLOAD_FOLDER'], filename)) 
         else:
+            return "Unsupported file type please upload .csv or .xlsx file"
+        print(df)
+        
+        #calculate time attended and return a dataframe
+        result = calculate_attendance(df, start_time, end_time)
+        result_copy = result
+        #convert result dataframe to .csv file for user to download
+        result.to_csv(UPLOAD_FOLDER + "[ATTENDANCE]" + filename, index=False)
 
-            filename = secure_filename(file.filename)
-            print(f'hi FILENAME: {filename}')
-            #get file extension
-            file_extension = os.path.splitext(filename)[1]
-
-            #save file to uploads folder
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-            if file_extension == '.csv':
-            #read file as pandas dataframe considering file extension
-                df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            elif file_extension == '.xlsx':
-                df = pd.read_excel(os.path.join(app.config['UPLOAD_FOLDER'], filename)) 
-            else:
-                return "Unsupported file type please upload .csv or .xlsx file"
-            print(df)
-            
-            #calculate time attended and return a dataframe
-            result = calculate_attendance(df, start_time, end_time)
-            result_copy = result
-            #convert result dataframe to .csv file for user to download
-            result.to_csv(UPLOAD_FOLDER + "[ATTENDANCE]" + filename, index=False)
-
-            #Delete file from storage after creating dataframe
-            # os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            #send file name as parameter to downlad
-            # return redirect(url_for('download_file', filename=filename, result=result_copy))
-            return render_template('download.html', value=filename, result=result.to_html())
+        #Delete file from storage after creating dataframe
+        # os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        #send file name as parameter to downlad
+        # return redirect(url_for('download_file', filename=filename, result=result_copy))
+        return render_template('download.html', file_chosen=file_chosen, value=filename, result=result.to_html())
 
     return render_template('data.html')
+
+@app.route('/view-file')
+def view_file():
+    
+    print(f'DATAFRAME: {df}')
+    return render_template('index.html', original_file=df)
 
 @app.route('/return-files/<filename>')
 def return_files_tut(filename):
