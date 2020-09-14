@@ -59,28 +59,18 @@ def data():
             
             #calculate time attended and return a dataframe
             result = calculate_attendance(df, start_time, end_time)
-
-            #copy result dataframe
             result_copy = result
-            print(f'RESULT COPY 1: {result_copy}')
-
             #convert result dataframe to .csv file for user to download
             result.to_csv(UPLOAD_FOLDER + "[ATTENDANCE]" + filename, index=False)
 
             #Delete file from storage after creating dataframe
             # os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             #send file name as parameter to downlad
-            return redirect(url_for('download_file', filename=filename))
+            # return redirect(url_for('download_file', filename=filename, result=result_copy))
+            return render_template('download.html', value=filename, result=result.to_html())
+
     return render_template('data.html')
 
-
-# Download API
-@app.route("/downloadfile/<filename>", methods = ['GET'])
-def download_file(filename):
-    print("Result Copy:")
-    print(result_copy)
-    print(f'Filename: {filename}')
-    return render_template('download.html',value=filename)
 @app.route('/return-files/<filename>')
 def return_files_tut(filename):
     file_path = 'uploads/' + filename
