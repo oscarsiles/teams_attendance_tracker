@@ -12,7 +12,7 @@
   </head>
   <body>
     <div class="main">
-      <h1>Attendance Tracker</h1>
+      <h1 class="title">Attendance Tracker</h1>
       <h4><a href="/demo.csv">Download Demo File</a></h4>
       <form
         action="{{ url_for('data') }}"
@@ -37,7 +37,15 @@
       </form>
     </div>
     <footer>
-      <p class="copyright">&copy; Copyright 2020 Zen Sajnani</p>
+      <p class="copyright">
+        Copyright &copy;
+        <script>
+          document.write(new Date().getFullYear());
+        </script>
+        <a href="https://www.linkedin.com/in/zensajnani/" target="_blank"
+          >Zen Sajnani</a
+        >
+      </p>
     </footer>
   </body>
 </html>
