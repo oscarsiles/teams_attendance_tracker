@@ -46,7 +46,7 @@ def data():
         print(f'FILENAME: {filename}')
         #get file extension
         file_extension = os.path.splitext(filename)[1]
-
+        filename_without_extension = os.path.splitext(filename)[0]
         #save file to uploads folder
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
@@ -63,13 +63,14 @@ def data():
         result = calculate_attendance(df, start_time, end_time)
         result_copy = result
         #convert result dataframe to .csv file for user to download
-        result.to_csv(UPLOAD_FOLDER + "[ATTENDANCE]" + filename, index=False)
+        result_filename = "[ATTENDANCE]" + filename_without_extension + ".csv"
+        result.to_csv(UPLOAD_FOLDER + result_filename, index=False)
 
         #Delete file from storage after creating dataframe
         # os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         #send file name as parameter to downlad
         # return redirect(url_for('download_file', filename=filename, result=result_copy))
-        return render_template('download.html', file_chosen=file_chosen, value=filename, result=result.to_html())
+        return render_template('download.html', file_chosen=file_chosen, value=result_filename, result=result.to_html())
 
     return render_template('data.html')
 
