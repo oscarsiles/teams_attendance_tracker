@@ -45,7 +45,7 @@ def data():
         #read file as pandas dataframe considering file extension
         if file_extension == '.csv':
             df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        elif file_extension == '.xlsx':
+        elif file_extension == '.xlsx' or file_extension == '.xls':
             df = pd.read_excel(os.path.join(app.config['UPLOAD_FOLDER'], filename)) 
         else:
             return "Unsupported file type please upload .csv or .xlsx file"
@@ -62,7 +62,7 @@ def data():
         # os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         #send file name as parameter to downlad
         # return redirect(url_for('download_file', filename=filename, result=result_copy))
-        return render_template('download.html', file_chosen=file_chosen, value=result_filename, result=result.to_html())
+        return render_template('download.html', value=result_filename, result=result.to_html())
 
     return render_template('data.html')
 
@@ -72,7 +72,7 @@ def data():
 def download_demo_file():
     demo_file_path = 'uploads/test.csv'
     return send_file(demo_file_path, as_attachment=False, attachment_filename='test.csv')
-    
+
 # @app.route('/view-file')
 # def view_file():
 
