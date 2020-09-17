@@ -14,9 +14,6 @@ app = Flask(__name__, template_folder='templates')
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-#to check if user has chosen a file
-file_chosen = False
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     return render_template('index.html')
@@ -26,32 +23,27 @@ def index():
 def data():
     
     if request.method == "POST":
+        #Time Format for Chrome
         time_format = '%Y-%m-%dT%H:%M'
+
+        #Convert time from html to python datetime.
         start_time = datetime.strptime(request.form['start_time'], time_format)
         end_time = datetime.strptime(request.form['end_time'], time_format)
         print(f'Edited  Time: {start_time} -- {end_time}')
-        # check if the post request has the file part
-        # if 'attendance-file' not in request.files:
-        #     print('no file')
-        #     return redirect(request.url)
+
+        #Get file uploaded by user
         file = request.files['attendance-file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        # if file.filename == '':
-        #     print('no filename')
-        #     return redirect(request.url)
-        # else:
-        file_chosen = True
         filename = secure_filename(file.filename)
         print(f'FILENAME: {filename}')
         #get file extension
         file_extension = os.path.splitext(filename)[1]
         filename_without_extension = os.path.splitext(filename)[0]
+
         #save file to uploads folder
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        if file_extension == '.csv':
         #read file as pandas dataframe considering file extension
+        if file_extension == '.csv':
             df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         elif file_extension == '.xlsx':
             df = pd.read_excel(os.path.join(app.config['UPLOAD_FOLDER'], filename)) 
@@ -80,6 +72,7 @@ def data():
 def download_demo_file():
     demo_file_path = 'uploads/test.csv'
     return send_file(demo_file_path, as_attachment=False, attachment_filename='test.csv')
+    
 # @app.route('/view-file')
 # def view_file():
 
