@@ -44,7 +44,12 @@ def data():
 
         #read file as pandas dataframe considering file extension
         if file_extension == '.csv':
-            df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            #For some users, Microsoft Teams returns a .csv file with UTF-8 encoding while for others UTF-16 encoding
+            #Try UTF-8 otherwise UTF-16 encoding with "tab" delimiter
+            try:
+                df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            except:
+                df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename), sep='\t', encoding='utf-16')
         elif file_extension == '.xlsx' or file_extension == '.xls':
             df = pd.read_excel(os.path.join(app.config['UPLOAD_FOLDER'], filename)) 
         else:
