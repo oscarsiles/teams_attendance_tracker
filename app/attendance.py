@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime
 
-def calculate_attendance(df, end_time):
+def calculate_attendance(df, start_time, end_time):
     #Remove Duplicates
     students_present = df['Full Name']
     students_present = list(dict.fromkeys(students_present))
@@ -26,14 +26,16 @@ def calculate_attendance(df, end_time):
         time_format = '%d/%m/%Y, %H:%M:%S'
         time_test = datetime.strptime(meeting_start_time, time_format)
         #Convert time returned from browser into format similar to MS Teams attendance sheet
+        time1 = datetime.strptime(start_time, browser_time_format).strftime('%H:%M:%S')
         time2 = datetime.strptime(end_time, browser_time_format).strftime('%H:%M:%S')
     except:
         time_format = '%m/%d/%Y, %I:%M:%S %p'
         time_test = datetime.strptime(meeting_start_time, time_format)
         #Convert time returned from browser into format similar to MS Teams attendance sheet
+        time1 = datetime.strptime(start_time, browser_time_format).strftime('%I:%M:%S %p')
         time2 = datetime.strptime(end_time, browser_time_format).strftime('%I:%M:%S %p')
 
-    
+    meeting_start_time = meeting_date + ", " + time1
     meeting_end_time = meeting_date + ", " + time2
     print(f' END TIME:{end_time}')
     print(f'MEETING END TIME:{meeting_end_time}')

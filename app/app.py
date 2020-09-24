@@ -28,6 +28,7 @@ def data():
 
         #Convert time from html to python datetime.
         # end_time = datetime.strptime(request.form['end_time'], time_format)
+        start_time = request.form['start_time']
         end_time = request.form['end_time']
 
         #Get file uploaded by user
@@ -52,11 +53,11 @@ def data():
         elif file_extension == '.xlsx' or file_extension == '.xls':
             df = pd.read_excel(os.path.join(app.config['UPLOAD_FOLDER'], filename)) 
         else:
-            return "Unsupported file type please upload .csv or .xlsx file"
+            return "Unsupported file type please upload .csv, .xlsx or .xls file"
         print(df)
         
         #calculate time attended and return a dataframe
-        result = calculate_attendance(df, end_time)
+        result = calculate_attendance(df, start_time, end_time)
         print(result)
         result_copy = result
         #convert result dataframe to .csv file for user to download
