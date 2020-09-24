@@ -1,65 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Attendance Tracker</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,900;1,100;1,300&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../static/styles.css" />
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=UA-178108791-1"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
+     <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+         
+          <title>Attendance Tracker</title>
+          <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,900;1,100;1,300&display=swap" rel="stylesheet"/>
+          <!-- Global site tag (gtag.js) - Google Analytics -->
+          <script async src="https://www.googletagmanager.com/gtag/js?id=UA-178108791-1"></script>
+          <script>
+               window.dataLayer = window.dataLayer || [];
+               function gtag() {
+                    dataLayer.push(arguments);
+               }
+               gtag("js", new Date());
+               gtag("config", "UA-178108791-1");
+          </script>
 
-      gtag("config", "UA-178108791-1");
-    </script>
-  </head>
-  <body>
-    <div class="main">
-      <h1 class="title">Attendance Tracker</h1>
-      <h4><a href="/demo.csv">Download Demo File</a></h4>
-      <form
-        action="{{ url_for('data') }}"
-        method="POST"
-        enctype="multipart/form-data"
-      >
-        <h3>Upload Attendance downloaded from Microsoft Teams</h3>
-        <input
-          type="file"
-          name="attendance-file"
-          accept=".csv, .xlsx, .xls"
-          required
-        />
-        <br /><br />
-        <!-- <label for="start_time">Meeting Start Time</label>
-        <input type="datetime-local" name="start_time" required />
-        <br /><br /> -->
-        <label for="end_time">Meeting End Time</label>
-        <input type="time" name="end_time" required />
-        <br /><br />
-        <input type="submit" value="Upload" />
-      </form>
-    </div>
-    <footer>
-      <p class="copyright">
-        Copyright &copy;
-        <script>
-          document.write(new Date().getFullYear());
-        </script>
-        <a href="https://www.linkedin.com/in/zensajnani/" target="_blank"
-          >Zen Sajnani</a
-        >
-      </p>
-    </footer>
-  </body>
+          <!--favicon-->
+          <link rel="icon" type="image/png" href="../img/zeniqle.png" >
+          <!--stylesheet-->
+          <link rel="stylesheet" href="../static/styles.css" />
+          <!--icon library-->
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+          <!--Google Font API-->
+          <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,700;1,800;1,900&display=swap" rel="stylesheet">
+          <!--Bootstrap CSS-->
+          <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+     </head>
+
+     <body>
+          <div class="container">
+               <!--main page content-->
+               <div class="row">
+                    <div>
+                         <!--header-->
+                         <header>
+                               <a href="./index.html"><img src="../img/zeniqle.jpeg" alt="Zeniqle"></a>
+                         </header>
+                    </div>
+               </div>
+               <div class="row">
+                    <div class="d-md-none col-8 mx-auto title">
+                         <h1>Attendance Tracker</h1>     
+                    </div>
+                    <div class="d-md-none col-8 mx-auto" id="xsform">
+                         <form action="{{ url_for('data') }}" method="POST" enctype="multipart/form-data" id="uploadform">
+                              &nbsp;<h2>Upload Attendance Sheet downloaded from Microsoft&nbsp;Teams</h2><br /><br />
+
+                              <!--<input type="file" name="attendance-file" accept=".csv, .xlsx, .xls" required/>-->
+                              <span id="upload"><button style="display:block;width:200px; height:30px;" onclick="document.getElementById('getFile').click()">Upload Attendance Sheet</button></span>
+                              <input type='file' name="attendance-file" id="attendance-file" accept=".csv, .xlsx, .xls" required style="display:none" /><br />
+                              
+                              <label for="start_time">Meeting Start Time</label>&nbsp;&nbsp;&nbsp;
+                              <input type="time" id="start_time" name="start_time" required />
+                              <br /><br />
+                              
+                              <label for="end_time">Meeting End Time</label>&nbsp;&nbsp;&nbsp;
+                              <input type="time" id="end_time" name="end_time" required />
+                              <br /><br /><br />
+                              
+                              <input type="submit" value="Go" />
+                         </form>
+                    </div>
+               </div>
+              
+               <div class="row justify-content-center" style="width: 100vw; ">
+                    <!--content-->
+                    <div class="d-md-inline-block col-md-4 col-lg-3" id="left">
+                         <h1>Attendance Tracker</h1><br>
+                         <p>This is an application to calculate the exact Attendance duration of a meeting attendee.</p><br>
+                         <p id="instr">
+                              How to use:<br />
+                              1. Download Attendance from Microsoft Teams <br />
+                              2. Upload the .csv, .xlsx, .xls file here <br />
+                              3. Click on 'Go' <br />
+                              4. Preview and Download the resultant file <br />
+                         </p><br />
+                         <h3><a href="/demo.csv">Download Demo Attendance File</a></h3>
+                    </div>
+                    
+                    <div class="d-md-inline-block col-md-4 col-lg-3" id="right">
+                         <form action="{{ url_for('data') }}" method="POST" enctype="multipart/form-data" id="uploadform">
+                              &nbsp;<h2>Upload Attendance Sheet downloaded from Microsoft&nbsp;Teams</h2><br /><br />
+
+                              <!--<input type="file" name="attendance-file" accept=".csv, .xlsx, .xls" required/>-->
+                              <span id="upload"><button style="display:block;width:200px; height:30px;" onclick="document.getElementById('getFile').click()">Upload&nbsp;Attendance&nbsp;Sheet&nbsp;</button></span>
+                              <input type='file' name="attendance-file" id="attendance-file" accept=".csv, .xlsx, .xls" required style="display:none" /><br />
+                              
+                              <label for="start_time">Meeting Start Time</label>&nbsp;&nbsp;&nbsp;
+                              <input type="time" id="start_time" name="start_time" required />
+                              <br /><br />
+                              
+                              <label for="end_time">Meeting End Time</label>&nbsp;&nbsp;&nbsp;
+                              <input type="time" id="end_time" name="end_time" required />
+                              <br /><br /><br />
+                              
+                              <input type="submit" value="Go" />
+                         </form>
+                    </div>
+               </div>
+                    
+                    <!--clear footer-->
+                    <div class="clearfooter"></div>
+               </div>
+
+
+
+               <!--footer-->
+               <footer>
+                    <a href="./index.html"><img src="../img/zeniqle.jpeg" alt="Zeniqle Logo" id="footlogo"></a>
+                    
+                    <p id="copyright">
+                         Copyright &copy;
+                         <script>
+                              document.write(new Date().getFullYear());
+                         </script>
+                         | Zen Sajnani
+                    </p>
+
+                    <div class="social">
+                         <ul>
+                              <li><a href="https://www.linkedin.com/in/zensajnani/" target="_blank"><img src="../img/linkedin_icon.png" alt="LinkedIn Icon" /></a></li>
+                              <li><a href="mailto:zhsajnani@gmail.com"><img src="../img/gmail_icon.png" alt="Gmail Icon" /></a></li>
+                         </ul>
+                    </div>
+               </footer>
+          </div>
+
+
+
+
+          <!--Bootstrap JS-->
+          <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+          <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
 </html>
