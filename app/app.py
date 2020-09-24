@@ -24,12 +24,11 @@ def data():
     
     if request.method == "POST":
         #Time Format for Chrome
-        time_format = '%Y-%m-%dT%H:%M'
+        time_format = '%H:%M'
 
         #Convert time from html to python datetime.
-        start_time = datetime.strptime(request.form['start_time'], time_format)
-        end_time = datetime.strptime(request.form['end_time'], time_format)
-        print(f'Edited  Time: {start_time} -- {end_time}')
+        # end_time = datetime.strptime(request.form['end_time'], time_format)
+        end_time = request.form['end_time']
 
         #Get file uploaded by user
         file = request.files['attendance-file']
@@ -57,7 +56,8 @@ def data():
         print(df)
         
         #calculate time attended and return a dataframe
-        result = calculate_attendance(df, start_time, end_time)
+        result = calculate_attendance(df, end_time)
+        print(result)
         result_copy = result
         #convert result dataframe to .csv file for user to download
         result_filename = "[ATTENDANCE]" + filename_without_extension + ".csv"
