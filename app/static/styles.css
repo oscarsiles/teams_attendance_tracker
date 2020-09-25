@@ -1,0 +1,152 @@
+* {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box;
+  line-height: 1.1em;
+  font-size: 2.4vh;
+}
+
+body {
+  overflow-x: hidden;
+  background-color:   #F4F4F4 !important ;
+  height: 95vh;
+}
+
+header {
+  position: absolute;
+  width: 100vw;
+  height: 7vw;
+}
+header > a > img {
+  margin:2.5vw !important;
+  width: 10vw;
+}
+
+.content {
+  min-height: calc(100vh - 11vw);
+  position: absolute;
+}
+
+h1 {
+  font-size: 5.2vh !important;
+  padding-bottom: 2vw !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+}
+
+#title h1 {
+  font-size: 4vh !important;
+  padding: 0.5 !important;
+}
+
+h2 {
+  font-weight: 600;
+  font-size: 4.5vh !important;
+}
+
+#xsform h2 {
+  font-size: 3.2vh !important;
+}
+
+#left, 
+#right, 
+#xsform, 
+#title  {
+  box-shadow: 2vw 2vw 2vw 1vw grey;
+  text-align: center;
+  border-radius: 1.5vw;
+  background-color: #FFF;
+}
+
+
+#xsform {
+  height: 45vh;
+  margin: 0 18vw !important;
+  padding: 2.5vw !important;
+}
+
+#title {
+  margin: 15vh 18vw 0 18vw !important;
+  height: 10vh;
+}
+
+#left,
+#right {
+  height: 60vh;
+  vertical-align: top;
+  display: none;
+  margin: 20vh 8vh !important;
+  padding: 1.5vw !important;
+}
+
+#instr {
+  font-weight: 300;
+  font-style: italic;
+  text-align: left;
+}
+
+#left a {
+  font-size: 2vh;
+  font-style: italic;
+}
+
+input[type="submit"] {
+  display: block;
+  padding: 0.5em 2.5em !important;
+  margin: 0 auto !important;
+  border-radius: 1vw;
+  font-size: 2.5vh;
+  border: 0.1em solid #000;
+}
+input[type="submit"]:hover {
+  border-color: #000;
+  cursor: pointer;
+}
+
+.clearfooter {
+  height: 4vw;
+  clear: both;
+}
+
+/*footer*/
+footer {
+  height: 4vw;
+  position: absolute;
+  bottom: 1vh;
+  width: 100vw;
+}
+
+/*copyright*/
+#copyright {
+  position: absolute;
+  text-align: center;
+  width: 100vw;
+  bottom: 0.5vw;
+  font-size: 0.8vw;
+  font-style: italic;
+}
+
+/*social media icons*/
+.social {
+  display: inline-block;
+  width: 10vw;
+  float: right;
+}
+
+ul {
+  display: flex;
+  position: absolute;
+}
+
+ul li {
+  list-style: none;
+}
+
+ul li a img {
+  height: 3vw;
+  margin: 0.5vw !important;
+}
+
+:focus {
+  outline: 1px solid  #696969;
+}
