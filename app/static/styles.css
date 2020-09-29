@@ -111,7 +111,6 @@ input[type="submit"]:hover {
 /*footer*/
 footer {
   height: 4vw;
-  position: absolute;
   bottom: 1vh;
   width: 100vw;
 }

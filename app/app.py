@@ -73,11 +73,11 @@ def data():
     return render_template('data.html')
 
 
-#Download demo file 'test.csv'
-@app.route('/demo.csv')
-def download_demo_file():
-    demo_file_path = 'uploads/test.csv'
-    return send_file(demo_file_path, as_attachment=False, attachment_filename='test.csv')
+# #Download demo file 'test.csv'
+# @app.route('/demo.csv')
+# def download_demo_file():
+#     demo_file_path = 'uploads/test.csv'
+#     return send_file(demo_file_path, as_attachment=False, attachment_filename='test.csv')
 
 # @app.route('/view-file')
 # def view_file():
