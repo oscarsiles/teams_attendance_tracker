@@ -5,6 +5,7 @@ import pandas as pd
 import csv
 from io import StringIO 
 from datetime import datetime
+import shortuuid
 
 from app.attendance import calculate_attendance
 
@@ -38,20 +39,23 @@ def data():
         #get file extension
         file_extension = os.path.splitext(filename)[1]
         filename_without_extension = os.path.splitext(filename)[0]
+        #for safety, best give each file a unique id so that people aren't provided with the incorrect file!
+        unique_filename_without_extention = filename_without_extension + "_" + shortuuid.uuid()
+        unique_filename = unique_filename_without_extention + file_extension
 
         #save file to uploads folder
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
 
         #read file as pandas dataframe considering file extension
         if file_extension == '.csv':
             #For some users, Microsoft Teams returns a .csv file with UTF-8 encoding while for others UTF-16 encoding
             #Try UTF-8 otherwise UTF-16 encoding with "tab" delimiter
             try:
-                df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
             except:
-                df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename), sep='\t', encoding='utf-16')
+                df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename), sep='\t', encoding='utf-16')
         elif file_extension == '.xlsx' or file_extension == '.xls':
-            df = pd.read_excel(os.path.join(app.config['UPLOAD_FOLDER'], filename)) 
+            df = pd.read_excel(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)) 
         else:
             return "Unsupported file type please upload .csv, .xlsx or .xls file"
         print(df)
@@ -61,11 +65,11 @@ def data():
         print(result)
         result_copy = result
         #convert result dataframe to .csv file for user to download
-        result_filename = "[ATTENDANCE]" + filename_without_extension + ".csv"
+        result_filename = "[ATTENDANCE]" + unique_filename_without_extention + ".csv"
         result.to_csv(UPLOAD_FOLDER + result_filename, index=False)
 
         #Delete file from storage after creating dataframe
-        # os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
         #send file name as parameter to downlad
         # return redirect(url_for('download_file', filename=filename, result=result_copy))
         return render_template('download.html', value=result_filename, result=result.to_html())
