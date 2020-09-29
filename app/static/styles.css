@@ -126,6 +126,10 @@ footer {
   font-style: italic;
 }
 
+#copyright a {
+  font-size: 0.8vw;
+}
+
 /*social media icons*/
 .social {
   display: inline-block;
