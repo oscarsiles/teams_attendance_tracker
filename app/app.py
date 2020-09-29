@@ -42,8 +42,10 @@ def data():
         #for safety, best give each file a unique id so that people aren't provided with the incorrect file!
         unique_filename_without_extention = filename_without_extension + "_" + shortuuid.uuid()
         unique_filename = unique_filename_without_extention + file_extension
+        print(f'FILENAME: {unique_filename}')
 
         #save file to uploads folder
+        os.makedirs(os.path.dirname(app.config['UPLOAD_FOLDER']), exist_ok=True)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
 
         #read file as pandas dataframe considering file extension
@@ -91,8 +93,18 @@ def data():
 
 @app.route('/return-files/<filename>')
 def return_files_tut(filename):
-    file_path = 'uploads/' + filename
-    return send_file(file_path, as_attachment=True, attachment_filename='')
+    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+    def generate():
+        with open(path) as f:
+            yield from f
+        os.remove(path)
+
+    r = app.response_class(generate(), mimetype='text/csv')
+    r.headers.set('Content-Disposition', 'attachment', filename=filename)
+    return r
+    # file_path = 'uploads/' + filename
+    # return send_file(file_path, as_attachment=True, attachment_filename='')
 
 
 # if __name__ == "__main__":
